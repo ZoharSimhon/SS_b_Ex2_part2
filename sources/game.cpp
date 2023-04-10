@@ -1,4 +1,8 @@
 #include "game.hpp"
+#include <ctime>    // For time()
+#include <cstdlib>  // For srand() and rand()
+using namespace std;
+
 Game::Game(Player &player1, Player &player2) : player1(player1), player2(player2)
 {
     this->draws = 0;
@@ -13,23 +17,23 @@ void Game::buildPacketCards()
     string shapes[4] = {"Hearts", "Diamonds", "Clubs", "Spades"};
     for (size_t i = 0; i < 4; i++)
     {
-        for (size_t j = 0; j < 13; j++)
+        for (size_t j = 1; j <= 13; j++)
         {
-            Card card(i, shapes[j]);
+            Card card(j, shapes[i]);
             cards.push_back(card);
         }
     }
-    splitPacketCards(&cards);
+    splitPacketCards(cards);
 }
 
 void Game::splitPacketCards(vector<Card> &cards)
 {
     vector<Card> player1cards;
     vector<Card> player2cards;
-    srand(time(NULL));
-    for (size_t i = 52; i > 0; i--)
+    srand(time(0));
+    for (int i = 52; i > 0; i--)
     {
-        int index = rand() % i;
+        int index = rand() % (i);
         if (i % 2 == 0)
         {
             player1cards.push_back(cards.at((size_t)index));
@@ -38,7 +42,7 @@ void Game::splitPacketCards(vector<Card> &cards)
         {
             player2cards.push_back(cards.at((size_t)index));
         }
-        cards.erase((size_t)index);
+        cards.erase(cards.begin() + index);
     }
     this->player1.setCards(player1cards);
     this->player2.setCards(player2cards);
@@ -47,6 +51,8 @@ void Game::splitPacketCards(vector<Card> &cards)
 void Game::playTurn()
 {
     checkValidPlayers();
+    if (this->player1.stacksize() == 0)
+        throw runtime_error("the game has already ended");
     Card card1 = this->player1.getFirstCard();
     Card card2 = this->player2.getFirstCard();
     bool isEmpty = false;
@@ -54,7 +60,7 @@ void Game::playTurn()
     int counter = 1;
     string log = player1.getName() + " played " + card1.toString();
     log += " " + player2.getName() + " played " + card2.toString() + ".";
-    while (winner == 0 || !isEmpty)
+    while (winner == 0 && !isEmpty)
     {
         this->draws++;
         log += " Draw. ";
@@ -143,15 +149,15 @@ void Game::printLog()
 void Game::printStats()
 {
     //
-    double player1winRate = ((double)player1wins / this->logs.size()) * 100;
+    double player1winRate = ((double)player1wins / (this->logs.size()+1)) * 100;
     cout << player1.getName() + ": Winning rate: " + to_string(player1winRate);
     cout << ", Cards won: " + to_string(player1.cardesTaken()) << endl;
     //
-    double player2winRate = ((double)player2wins / this->logs.size()) * 100;
+    double player2winRate = ((double)player2wins / (this->logs.size()+1)) * 100;
     cout << player2.getName() + ": Winning rate: " + to_string(player2winRate);
     cout << ", Cards won: " + to_string(player2.cardesTaken()) << endl;
     //
-    double drawRate = ((double)draws / this->logs.size()) * 100;
+    double drawRate = ((double)draws / (this->logs.size()+1)) * 100;
     cout << "Game: Draw rate: " + to_string(drawRate);
     cout << ", Draw amount: " + to_string(draws) << endl;
 }

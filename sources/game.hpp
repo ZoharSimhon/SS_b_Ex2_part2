@@ -21,4 +21,4 @@ public:
     void printLastTurn();
     void printLog();
     void printStats();
-}
+};

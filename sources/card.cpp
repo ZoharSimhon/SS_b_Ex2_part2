@@ -40,10 +40,8 @@ int Card::compareTo(Card other)
     {
         return -1;
     }
-    else
-    {
-        return 1;
-    }
+    
+    return 1;
 }
 
 string Card::toString()

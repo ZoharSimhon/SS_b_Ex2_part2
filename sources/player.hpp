@@ -22,4 +22,4 @@ public:
     void addCardsTaken(int);
     bool getInPlay();
     void setInPlay(bool);
-}
+};

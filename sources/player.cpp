@@ -4,7 +4,7 @@ Player::Player(string name)
 {
     this->name = name;
     this->inPlay = false;
-    this->cardesTaken = 0;
+    this->cardsTaken = 0;
 }
 
 Card &Player::getFirstCard()
