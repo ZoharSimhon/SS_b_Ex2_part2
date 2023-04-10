@@ -10,10 +10,11 @@ private:
     string name;
     vector<Card> cards;
     bool inPlay;
+    int cardsTaken;
 
 public:
     Player(string);
-    int stacksize();
+    int stacksize();    
     int cardesTaken();
     void setCards(vector<Card> &);
     Card &getFirstCard();
